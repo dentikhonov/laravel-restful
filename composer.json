@@ -1,17 +1,39 @@
 {
-    "name": "devolt/laravel-restful",
+    "name": "devolt/laravel-modular",
+    "description": "",
     "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/TheDevolt/laravel-restful",
+    "support": {
+        "issues": "https://github.com/TheDevolt/laravel-restful/issues",
+        "source": "https://github.com/TheDevolt/laravel-restful"
+    },
+    "authors": [
+        {
+            "name": "Leonid Meleshin",
+            "email": "leon.03.99@gmail.com"
+        }
+    ],
     "require": {
-        "illuminate/support": "~6.0|~7.0"
+        "php": "^7.4",
+        "illuminate/database": "~6.0|~7.0",
+        "illuminate/support": "~6.0|~7.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.1"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Leonid Meleshin",
-            "email": "leon0399@explabs.ru"
+    "autoload": {
+        "psr-4": {
+            "Devolt\\Restful\\": "src/"
         }
-    ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Devolt\\Restful\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
 }
