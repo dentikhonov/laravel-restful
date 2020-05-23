@@ -33,6 +33,13 @@
             "Devolt\\Restful\\": "tests/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Devolt\\Restful\\RestfulServiceProvider"
+            ]
+        }
+    },
     "scripts": {
         "test": "phpunit"
     }
