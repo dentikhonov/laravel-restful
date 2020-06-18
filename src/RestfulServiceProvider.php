@@ -11,9 +11,7 @@ final class RestfulServiceProvider extends ServiceProvider implements Deferrable
 {
     public function register()
     {
-        $this->app->bind(Restful::class, function($app) {
-            return new JsonApiRestfulService();
-        });
+        $this->app->bind(Restful::class, fn($app) => new JsonApiRestfulService());
     }
 
     public function provides()
