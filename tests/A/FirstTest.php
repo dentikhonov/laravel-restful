@@ -2,9 +2,9 @@
 
 namespace Devolt\Restful\Tests\A;
 
-use PHPUnit\Framework\TestCase;
+use Devolt\Restful\Tests\AppTestCase;
 
-class FirstTest extends TestCase
+class FirstTest extends AppTestCase
 {
     /**
      * @testdox Consumes testing bootstrap time

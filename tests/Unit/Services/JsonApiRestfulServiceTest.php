@@ -2,7 +2,6 @@
 
 namespace Devolt\Restful\Tests\Unit\Services;
 
-use Devolt\Restful\Models\Model;
 use Devolt\Restful\Services\JsonApiRestfulService;
 use Devolt\Restful\Tests\TestModels\TestModel;
 use Illuminate\Http\Request;
@@ -47,5 +46,27 @@ class JsonApiRestfulServiceTest extends TestCase
         $jsonService->shouldReceive('getModelInstance')->andReturn($model);
 
         $this->assertEquals($expected, $jsonService->getPerPage());
+    }
+
+    /**
+     * @test
+     */
+    public function it_correctly_extracts_attributes_from_json_api_schema()
+    {
+        $expected = [
+            'title' => 'Ember Hamster',
+            'src' => 'http://example.com/images/productivity.png'
+        ];
+
+        $request = [
+            'data' => [
+                'type' => 'photos',
+                'attributes' => $expected
+            ]
+        ];
+
+        $jsonService = new JsonApiRestfulService(new Request());
+
+        $this->assertEquals($expected, $jsonService->getAttributesFromData($request));
     }
 }

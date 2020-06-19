@@ -44,12 +44,12 @@ interface Restful
     public function getPerPage(): ?int;
 
     /**
-     * @param Model $resource
+     * @param array|Model $resource
      * @param array|null $data
      * @return array Validated data
      * @throws ValidationException
      */
-    public function validateResource(Model $resource, ?array $data = null): array;
+    public function validateResource($resource, ?array $data = null): array;
 
     /**
      * @param Model $resource

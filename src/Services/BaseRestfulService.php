@@ -49,6 +49,32 @@ abstract class BaseRestfulService implements Restful
     /**
      * @inheritDoc
      */
+    public function createInstance(array $input): Model
+    {
+        return $this->getModelInstance()->create($this->validateResource($this->getModelInstance(), $input));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateInstance(Model $model, array $input): Model
+    {
+        $model->update($this->validateResourceUpdate($model, $input));
+
+        return $model;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteInstance(Model $model)
+    {
+        return $model->delete();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getPerPage(): ?int
     {
         return $this->getModelInstance()->getPerPage();
@@ -58,8 +84,13 @@ abstract class BaseRestfulService implements Restful
      * @inheritDoc
      * @throws ValidationException
      */
-    public function validateResource(Model $resource, ?array $data = null): array
+    public function validateResource($resource, ?array $data = null): array
     {
+        if (is_array($resource) && empty($data)) {
+            $data = $resource;
+            $resource = $this->getModelInstance();
+        }
+
         // If no data is provided, validate the resource against it's present attributes
         if (is_null($data)) {
             $data = $resource->getAttributes();
@@ -67,7 +98,8 @@ abstract class BaseRestfulService implements Restful
             $data = $this->getAttributesFromData($data);
         }
 
-        $validator = validator($data, $resource->getValidationRules(), $resource->getValidationMessages());
+        $validationRules = $resource->getValidationRules();
+        $validator = validator($data, $validationRules, $resource->getValidationMessages());
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -114,7 +146,35 @@ abstract class BaseRestfulService implements Restful
         return $relevantRules;
     }
 
-    abstract protected function getAttributesFromData(array $data): array;
+    public function getAttributesFromData(array $data): array
+    {
+        return $data;
+    }
+
+    /**
+     * @var Model $model
+     * @inheritDoc
+     */
+    public function singleItemQuery($model): Model
+    {
+        $model->load($model::getItemWith());
+        $model->loadCount($model::getItemWithCount());
+
+        return $model;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function collectionQuery(): Builder
+    {
+        $query = $this->qualifyCollectionPolicyQuery($this->getModelInstance()->newModelQuery());
+        $query = $this->qualifyCollectionRelationsQuery($query);
+        // todo Добавить поддержку Builder сс #2
+        // $query = $this->qualifyQueryBuilder($query);
+
+        return $query;
+    }
 
     /**
      * This function can be used to add conditions to the query builder,

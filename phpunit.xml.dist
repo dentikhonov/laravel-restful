@@ -16,12 +16,25 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
+
     <filter>
         <whitelist>
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
+
     <listeners>
         <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
     </listeners>
+
+    <php>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+        <env name="APP_ENV" value="testing"/>
+        <!-- Test App -->
+        <env name="APP_DEBUG" value="true"/>
+        <env name="APP_URL" value="http://localhost"/>
+        <env name="APP_KEY" value="CC58JtJ6QNRTnAr3tdwTw6qMuiK4nDTaozD8Uk3zQ0xuTc6VbW2DBek3cArbnZTx"/>
+        <!-- Test App -->
+    </php>
 </phpunit>
