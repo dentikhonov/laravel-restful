@@ -4,12 +4,15 @@ namespace Devolt\Restful\Http\Responses;
 
 use Devolt\Restful\Http\Responses\Traits\WithRelations;
 use Devolt\Restful\Models\Model;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use ReflectionException;
 
 /**
  * @mixin Model
  */
 
-class JsonApiResource /* extends JsonResource */
+class JsonApiResource extends JsonResource
 {
     use WithRelations;
 

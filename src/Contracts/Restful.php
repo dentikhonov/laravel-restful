@@ -3,6 +3,11 @@
 namespace Devolt\Restful\Contracts;
 
 use Devolt\Restful\Models\Model;
+use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Validation\ValidationException;
 
 interface Restful
 {

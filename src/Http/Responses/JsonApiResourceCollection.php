@@ -3,8 +3,11 @@
 namespace Devolt\Restful\Http\Responses;
 
 use Devolt\Restful\Http\Responses\Traits\WithRelations;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class JsonApiResourceCollection /* extends ResourceCollection */
+class JsonApiResourceCollection extends ResourceCollection
 {
     use WithRelations;
 

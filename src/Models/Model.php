@@ -7,7 +7,13 @@ use Devolt\Restful\Http\Responses\JsonApiResourceCollection;
 use Devolt\Restful\Models\Traits\WithIncludes;
 use Devolt\Restful\Models\Traits\WithValidation;
 use Illuminate\Database\Eloquent\Model as BaseModel;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ * @mixin \Illuminate\Database\Query\Builder
+ */
 abstract class Model extends BaseModel
 {
     use WithValidation;

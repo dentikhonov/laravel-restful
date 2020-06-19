@@ -4,6 +4,8 @@ namespace Devolt\Restful\Http\Controllers;
 
 use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Models\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class BaseRestfulController
 {
@@ -24,7 +26,9 @@ abstract class BaseRestfulController
      */
     public function __construct(Restful $restfulService)
     {
-        $this->authorizeResource(static::$model);
+        if (method_exists($this, 'authorizeResource')) {
+            $this->authorizeResource(static::$model);
+        }
 
         $this->restfulService = $restfulService;
         $this->restfulService->setModel(static::$model);

@@ -6,15 +6,24 @@ use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Http\Responses\JsonApiResource;
 use Devolt\Restful\Http\Responses\JsonApiResourceCollection;
 use Devolt\Restful\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class JsonApiRestfulService extends BaseRestfulService implements Restful
 {
+    protected Request $request;
+
+    public function __construct($request)
+    {
+        $this->request = $request;
+    }
+
     /**
      * @inheritDoc
      */
     public function getPerPage(): ?int
     {
-        return request('per_page') ?? parent::getPerPage();
+        return $this->request->query('per_page', parent::getPerPage());
     }
 
     /**
@@ -44,15 +53,15 @@ class JsonApiRestfulService extends BaseRestfulService implements Restful
     /**
      * @inheritDoc
      */
-    //todo Добавить поддержку Builder сс #2
-//    public function collectionQuery(): Builder
-//    {
-//        $query = $this->qualifyCollectionPolicyQuery($this->getModelInstance()->newModelQuery());
-//        $query = $this->qualifyCollectionRelationsQuery($query);
-//        $query = $this->qualifyQueryBuilder($query);
-//
-//        return $query;
-//    }
+    public function collectionQuery(): Builder
+    {
+        $query = $this->qualifyCollectionPolicyQuery($this->getModelInstance()->newModelQuery());
+        $query = $this->qualifyCollectionRelationsQuery($query);
+        // todo Добавить поддержку Builder сс #2
+        // $query = $this->qualifyQueryBuilder($query);
+
+        return $query;
+    }
 
     /**
      * @var Model $model

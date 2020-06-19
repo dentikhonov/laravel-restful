@@ -4,6 +4,10 @@ namespace Devolt\Restful\Services;
 
 use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Models\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 abstract class BaseRestfulService implements Restful
 {
@@ -13,11 +17,6 @@ abstract class BaseRestfulService implements Restful
     protected ?string $model = null;
 
     protected ?Model $modelInstance = null;
-
-    public function __construct(string $model = null)
-    {
-        $this->model = $model;
-    }
 
     /**
      * @inheritDoc
@@ -52,11 +51,12 @@ abstract class BaseRestfulService implements Restful
      */
     public function getPerPage(): ?int
     {
-        return request('per_page') ?? $this->getModelInstance()->getPerPage();
+        return $this->getModelInstance()->getPerPage();
     }
 
     /**
      * @inheritDoc
+     * @throws ValidationException
      */
     public function validateResource(Model $resource, ?array $data = null): array
     {
@@ -67,7 +67,7 @@ abstract class BaseRestfulService implements Restful
             $data = $this->getAttributesFromData($data);
         }
 
-        $validator = Validator::make($data, $resource->getValidationRules(), $resource->getValidationMessages());
+        $validator = validator($data, $resource->getValidationRules(), $resource->getValidationMessages());
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -78,10 +78,11 @@ abstract class BaseRestfulService implements Restful
 
     /**
      * @inheritDoc
+     * @throws ValidationException
      */
     public function validateResourceUpdate(Model $resource, array $data): array
     {
-        $validator = Validator::make(
+        $validator = validator(
             $this->getAttributesFromData($data),
             $this->getRelevantValidationRulesUpdating($resource, $data),
             $resource->getValidationMessages()

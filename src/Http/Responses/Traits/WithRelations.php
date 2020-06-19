@@ -3,6 +3,13 @@
 namespace Devolt\Restful\Http\Responses\Traits;
 
 use Devolt\Restful\Models\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * @mixin JsonResource
