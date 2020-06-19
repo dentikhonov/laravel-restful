@@ -8,7 +8,9 @@
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
          processIsolation="true"
-         stopOnFailure="false">
+         stopOnFailure="false"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/sebastianbergmann/phpunit/master/phpunit.xsd">
     <testsuites>
         <testsuite name="Restful Test Suite">
             <directory>tests</directory>
@@ -19,4 +21,7 @@
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
+    <listeners>
+        <listener class="\Mockery\Adapter\Phpunit\TestListener"/>
+    </listeners>
 </phpunit>

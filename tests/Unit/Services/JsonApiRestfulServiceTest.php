@@ -40,33 +40,11 @@ class JsonApiRestfulServiceTest extends TestCase
     {
         $expected = 24;
 
-        Mockery::mock(TestModel::class)->makePartial()
-            ->shouldReceive('getPerPage')
-            ->andReturn($expected);
+        $model = Mockery::mock(TestModel::class);
+        $model->shouldReceive('getPerPage')->andReturn($expected);
 
-        $jsonService = new JsonApiRestfulService(new Request());
-        $jsonService->setModel(TestModel::class);
-
-        $this->assertEquals($expected, $jsonService->getPerPage());
-    }
-
-    /**
-     * @test
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function it_uses_per_page_from_request_when_available()
-    {
-        $expected = 24;
-
-        Mockery::mock(TestModel::class)->makePartial()
-            ->shouldReceive('getPerPage')
-            ->andReturn(12);
-
-        $jsonService = new JsonApiRestfulService(new Request([
-            'per_page' => $expected,
-        ]));
-        $jsonService->setModel(TestModel::class);
+        $jsonService = Mockery::mock(JsonApiRestfulService::class, [new Request()])->makePartial();
+        $jsonService->shouldReceive('getModelInstance')->andReturn($model);
 
         $this->assertEquals($expected, $jsonService->getPerPage());
     }
