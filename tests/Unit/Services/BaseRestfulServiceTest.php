@@ -28,18 +28,20 @@ class BaseRestfulServiceTest extends AppTestCase
 
     /**
      * @test
+     * @group validation
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
     public function it_uses_validation_rules_from_model()
     {
+        /** @var TestModel|MockInterface $model */
         $model = Mockery::mock(TestModel::class)->makePartial();
         $model->shouldReceive('getValidationRules')->andReturn(self::$validationRules);
 
+        /** @var BaseRestfulService|MockInterface $jsonService */
         $jsonService = Mockery::mock(BaseRestfulService::class)->makePartial();
         $jsonService->shouldReceive('getModelInstance')->andReturn($model);
 
-        /** @var BaseRestfulService|MockInterface $jsonService */
         $validated = $jsonService->validateResource(self::$input);
 
         $this->assertArrayHasKey('title', $validated);
@@ -49,6 +51,7 @@ class BaseRestfulServiceTest extends AppTestCase
 
     /**
      * @test
+     * @group validation
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -73,6 +76,7 @@ class BaseRestfulServiceTest extends AppTestCase
 
     /**
      * @test
+     * @group validation
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
@@ -90,5 +94,79 @@ class BaseRestfulServiceTest extends AppTestCase
 
         $this->expectException(ValidationException::class);
         $validated = $jsonService->validateResource($model);
+    }
+
+    /**
+     * @test
+     * @group validation
+     * @group validation-updating
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function it_uses_updating_validation_rules_from_model()
+    {
+        /** @var TestModel|MockInterface $model */
+        $model = Mockery::mock(TestModel::class)->makePartial();
+        $model->shouldReceive('getValidationRules')->andReturn(self::$validationRules);
+
+        /** @var BaseRestfulService|MockInterface $jsonService */
+        $jsonService = Mockery::mock(BaseRestfulService::class)->makePartial();
+        $jsonService->shouldReceive('getModelInstance')->andReturn($model);
+
+        $validated = $jsonService->validateResourceUpdate($model, self::$input);
+
+        $this->assertArrayHasKey('src', $validated);
+        $this->assertArrayHasKey('title', $validated);
+        $this->assertArrayNotHasKey('not_existent', $validated);
+    }
+
+    /**
+     * @test
+     * @group validation
+     * @group validation-updating
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function it_should_extract_only_relevant_validation_rules_from_model()
+    {
+        /** @var TestModel|MockInterface $model */
+        $model = Mockery::mock(TestModel::class)->makePartial();
+        $model->shouldReceive('getValidationRules')->andReturn(self::$validationRules);
+
+        /** @var BaseRestfulService|MockInterface $jsonService */
+        $jsonService = Mockery::mock(BaseRestfulService::class)->makePartial();
+        $jsonService->shouldReceive('getModelInstance')->andReturn($model);
+
+        $validated = $jsonService->validateResourceUpdate($model, [
+            'src' => 'http://example.com/images/procrastination.png',
+            'not_existent' => 'some string, that will be ignored',
+        ]);
+
+        $this->assertArrayHasKey('src', $validated);
+        $this->assertArrayNotHasKey('title', $validated);
+        $this->assertArrayNotHasKey('not_existent', $validated);
+    }
+
+    /**
+     * @test
+     * @group validation
+     * @group validation-updating
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function it_should_fail_when_updating_with_wrong_input()
+    {
+        /** @var TestModel|MockInterface $model */
+        $model = Mockery::mock(TestModel::class)->makePartial();
+        $model->shouldReceive('getValidationRules')->andReturn(self::$validationRules);
+        $model->fillable(array_keys(self::$validationRules));
+        $model->fill(array_intersect_key(self::$input, self::$validationRules));
+
+        /** @var BaseRestfulService|MockInterface $jsonService */
+        $jsonService = Mockery::mock(BaseRestfulService::class)->makePartial();
+        $jsonService->shouldReceive('getModelInstance')->andReturn($model);
+
+        $this->expectException(ValidationException::class);
+        $validated = $jsonService->validateResourceUpdate($model, ['src' => null]);
     }
 }

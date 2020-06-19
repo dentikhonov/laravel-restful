@@ -2,6 +2,7 @@
 
 namespace Devolt\Restful\Tests;
 
+use Devolt\Restful\RestfulServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -25,5 +26,10 @@ class AppTestCase extends TestCase
             $table->string('name');
             $table->boolean('is_visible')->default(true);
         });
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [RestfulServiceProvider::class];
     }
 }
