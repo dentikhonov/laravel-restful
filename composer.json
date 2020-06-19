@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Devolt\\Restful\\": "tests/"
+            "Devolt\\Restful\\Tests\\": "tests/"
         }
     },
     "extra": {
