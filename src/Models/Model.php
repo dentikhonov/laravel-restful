@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 
 abstract class Model extends BaseModel
 {
-    use WithValidation,
-        WithIncludes;
+    use WithValidation;
+    use WithIncludes;
 
     /** @var string<JsonResource> $resource */
     public static string $resource = JsonApiResource::class;

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Devolt\Restful\Http\Controllers;
-
 
 class RestfulController extends BaseRestfulController
 {

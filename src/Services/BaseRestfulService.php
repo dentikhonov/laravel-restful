@@ -83,7 +83,9 @@ abstract class BaseRestfulService implements Restful
     {
         $validator = Validator::make(
             $this->getAttributesFromData($data),
-            $this->getRelevantValidationRulesUpdating($resource, $data), $resource->getValidationMessages());
+            $this->getRelevantValidationRulesUpdating($resource, $data),
+            $resource->getValidationMessages()
+        );
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -111,7 +113,7 @@ abstract class BaseRestfulService implements Restful
         return $relevantRules;
     }
 
-    protected abstract function getAttributesFromData(array $data): array;
+    abstract protected function getAttributesFromData(array $data): array;
 
     /**
      * This function can be used to add conditions to the query builder,

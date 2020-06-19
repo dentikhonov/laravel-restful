@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Devolt\Restful\Http\Controllers;
-
 
 use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Models\Model;

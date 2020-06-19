@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Devolt\Restful\Http\Responses\Traits;
-
 
 use Devolt\Restful\Models\Model;
 

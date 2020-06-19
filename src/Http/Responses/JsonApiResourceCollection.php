@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Devolt\Restful\Http\Responses;
-
 
 use Devolt\Restful\Http\Responses\Traits\WithRelations;
 
