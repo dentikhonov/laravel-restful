@@ -21,7 +21,8 @@
         "ext-json": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.1"
+        "phpunit/phpunit": "^9.1",
+        "satesh/phpcs-gitlab-report": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -40,6 +41,12 @@
             ]
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/leon0399/phpcs-gitlab-report.git"
+        }
+    ],
     "scripts": {
         "test": "phpunit"
     }
