@@ -12,16 +12,20 @@ cache:
   paths:
     - vendor/
 
-# Install dependencies
+before_script:
+  - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
+
+  # Install dependencies
 install:composer:
   stage: prepare
-  script:
+  before_script:
     - php -v
+  script:
+    - composer --version
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
   artifacts:
     paths:
       - vendor/
-      - .env
     expire_in: 1 days
     when: always
   cache:
