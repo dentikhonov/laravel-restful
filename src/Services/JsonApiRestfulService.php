@@ -3,6 +3,8 @@
 namespace Devolt\Restful\Services;
 
 use Devolt\Restful\Contracts\Restful;
+use Devolt\Restful\Http\Responses\JsonApiResource;
+use Devolt\Restful\Http\Responses\JsonApiResourceCollection;
 use Devolt\Restful\Models\Model;
 
 class JsonApiRestfulService extends BaseRestfulService implements Restful
@@ -12,7 +14,7 @@ class JsonApiRestfulService extends BaseRestfulService implements Restful
      */
     public function getPerPage(): ?int
     {
-        return request('per_page') ?? $this->getModelInstance()->getPerPage();
+        return request('per_page') ?? parent::getPerPage();
     }
 
     /**
@@ -21,6 +23,22 @@ class JsonApiRestfulService extends BaseRestfulService implements Restful
     protected function getAttributesFromData(array $data): array
     {
         return $data['data']['attributes'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResourceClass(): string
+    {
+        return $this->getModelInstance()->getResource() ?? JsonApiResource::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getResourceCollectionClass(): string
+    {
+        return $this->getModelInstance()->getResourceCollection() ?? JsonApiResourceCollection::class;
     }
 
     /**

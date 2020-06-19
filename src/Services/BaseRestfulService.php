@@ -50,6 +50,14 @@ abstract class BaseRestfulService implements Restful
     /**
      * @inheritDoc
      */
+    public function getPerPage(): ?int
+    {
+        return request('per_page') ?? $this->getModelInstance()->getPerPage();
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function validateResource(Model $resource, ?array $data = null): array
     {
         // If no data is provided, validate the resource against it's present attributes
@@ -84,21 +92,6 @@ abstract class BaseRestfulService implements Restful
         return $validator->validated();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getResourceClass(): string
-    {
-        return $this->getModelInstance()->getResource() ?? JsonApiResource::class;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getResourceCollectionClass(): string
-    {
-        return $this->getModelInstance()->getResourceCollection() ?? JsonApiResourceCollection::class;
-    }
 
     protected function getRelevantValidationRulesUpdating(Model $resource, array $data): array
     {
