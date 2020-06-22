@@ -170,8 +170,6 @@ abstract class BaseRestfulService implements Restful
     {
         $query = $this->qualifyCollectionPolicyQuery($this->getModelInstance()->newModelQuery());
         $query = $this->qualifyCollectionRelationsQuery($query);
-        // todo Добавить поддержку Builder сс #2
-        // $query = $this->qualifyQueryBuilder($query);
 
         return $query;
     }
