@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Devolt\Restful\Models\Traits;
 
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\AllowedSort;
-
 
 /**
  * @mixin \Eloquent
