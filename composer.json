@@ -3,10 +3,10 @@
     "description": "",
     "type": "library",
     "license": "MIT",
-    "homepage": "https://github.com/TheDevolt/laravel-restful",
+    "homepage": "https://github.com/devolt-one/laravel-restful",
     "support": {
-        "issues": "https://github.com/TheDevolt/laravel-restful/issues",
-        "source": "https://github.com/TheDevolt/laravel-restful"
+        "issues": "https://github.com/devolt-one/laravel-restful/issues",
+        "source": "https://github.com/devolt-one/laravel-restful"
     },
     "authors": [
         {
@@ -17,11 +17,16 @@
     "require": {
         "php": "^7.4",
         "illuminate/database": "~6.0|~7.0",
+        "illuminate/http": "~6.0|~7.0",
         "illuminate/support": "~6.0|~7.0",
-        "ext-json": "*"
+        "illuminate/validation": "~6.0|~7.0",
+        "spatie/laravel-query-builder": "^2.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.1"
+        "ext-json": "*",
+        "orchestra/testbench": "~3.6.0|~3.7.0|~3.8.0|^4.0|^5.0",
+        "phpunit/phpunit": "^7.0|^8.0|^9.0",
+        "satesh/phpcs-gitlab-report": "dev-master"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Devolt\\Restful\\": "tests/"
+            "Devolt\\Restful\\Tests\\": "tests/"
         }
     },
     "extra": {
@@ -40,7 +45,17 @@
             ]
         }
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/leon0399/phpcs-gitlab-report.git"
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
     "scripts": {
-        "test": "phpunit"
+        "test": "phpunit",
+        "test-coverage": "phpunit --coverage-html coverage"
     }
 }

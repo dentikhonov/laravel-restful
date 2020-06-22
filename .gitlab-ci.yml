@@ -1,0 +1,73 @@
+image: lorisleiva/laravel-docker:7.4
+
+stages:
+  - prepare
+  - test
+
+variables: &global-variables
+  DOCKER_DRIVER: overlay2
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - vendor/
+
+before_script:
+  - composer config -g github-oauth.github.com $GITHUB_OAUTH_TOKEN
+
+  # Install dependencies
+install:composer:
+  stage: prepare
+  before_script:
+    - php -v
+  script:
+    - composer --version
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - vendor/
+
+test:phpunit:
+  stage: test
+  before_script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
+  script:
+    - php ./vendor/phpunit/phpunit/phpunit --version
+    - php -d memory_limit=512M ./vendor/phpunit/phpunit/phpunit -v --log-junit phpunit-report.xml --coverage-text --colors=never --stderr
+  cache:
+    policy: pull
+    paths:
+      - vendor/
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+  artifacts:
+    reports:
+      junit: phpunit-report.xml
+    expire_in: 1 week
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer
+
+code_quality:phpcs:
+  stage: test
+  before_script:
+    - composer install --prefer-dist --no-ansi --no-interaction --no-progress
+  script:
+    - php -d memory_limit=512M ./vendor/bin/phpcs --report=\\Satesh\\Phpcs\\CodeQualityReport --report-file=gl-code-quality-report.json
+  cache:
+    policy: pull
+    paths:
+      - vendor/
+  artifacts:
+    reports:
+      codequality: gl-code-quality-report.json
+  allow_failure: true
+  dependencies:
+    - install:composer
+  needs:
+    - install:composer

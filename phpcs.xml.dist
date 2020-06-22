@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Restful PHPCS Ruleset"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
+    <!-- ================================================ -->
+    <!-- Basic Config -->
+    <!-- ================================================ -->
+    <description>This is the PHP coding standard used for the Laravel Restful package</description>
+
+    <!-- Specify Paths to check -->
+    <file>src</file>
+
+    <!-- ================================================ -->
+    <!-- Commandline Flags -->
+    <!-- ================================================ -->
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!-- ================================================ -->
+    <!-- Rules -->
+    <!-- ================================================ -->
+
+    <!-- Ref: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Customisable-Sniff-Properties -->
+
+    <!-- PSR12 Set -->
+    <rule ref="PSR12"/>
+
+</ruleset>
