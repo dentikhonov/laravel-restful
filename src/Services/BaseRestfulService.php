@@ -93,14 +93,13 @@ abstract class BaseRestfulService implements Restful
         }
 
         // If no data is provided, validate the resource against it's present attributes
-        if (is_null($data)) {
-            $data = $resource->getAttributes();
-        } else {
-            $data = $this->getAttributesFromData($data);
-        }
+        $data = is_null($data) ? $resource->getAttributes() : $this->getAttributesFromData($data);
 
-        $validationRules = $resource->getValidationRules();
-        $validator = validator($data, $validationRules, $resource->getValidationMessages());
+        $validator = validator(
+            $data,
+            $resource->getValidationRules(),
+            $resource->getValidationMessages()
+        );
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
@@ -115,8 +114,11 @@ abstract class BaseRestfulService implements Restful
      */
     public function validateResourceUpdate(Model $resource, array $data): array
     {
+        // If no data is provided, validate the resource against it's present attributes
+        $data = is_null($data) ? $resource->getChanges() : $this->getAttributesFromData($data);
+
         $validator = validator(
-            $this->getAttributesFromData($data),
+            $data,
             $this->getRelevantValidationRulesUpdating($resource, $data),
             $resource->getValidationMessages()
         );
@@ -175,7 +177,7 @@ abstract class BaseRestfulService implements Restful
 
     public function getHiddenFieldsFor(Model $model, Authenticatable $user): array
     {
-        $modelPolicy = Gate::getPolicyFor($this->getModel());
+        $modelPolicy = $this->getPolicyFor($this->getModel());
 
         if (method_exists($modelPolicy, 'viewField')) {
             return collect($modelPolicy->viewField($user, $model))
@@ -210,7 +212,7 @@ abstract class BaseRestfulService implements Restful
     {
         $user = auth()->user();
 
-        $modelPolicy = Gate::getPolicyFor($this->model);
+        $modelPolicy = $this->getPolicyFor($this->model);
 
         // If no policy exists for this model, then there's nothing to check
         if (is_null($modelPolicy)) {
@@ -233,5 +235,10 @@ abstract class BaseRestfulService implements Restful
     {
         return $query->with($this->getModelInstance()::getCollectionWith())
             ->withCount($this->getModelInstance()::getCollectionWithCount());
+    }
+
+    protected function getPolicyFor(string $class)
+    {
+        return Gate::getPolicyFor($class);
     }
 }
