@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 
 abstract class BaseRestfulService implements Restful
@@ -95,6 +96,9 @@ abstract class BaseRestfulService implements Restful
         // If no data is provided, validate the resource against it's present attributes
         $data = is_null($data) ? $resource->getAttributes() : $this->getAttributesFromData($data);
 
+        // Check, if user can update field
+        $data = $this->authorizeFields($data, $resource, auth()->user());
+
         $validator = validator(
             $data,
             $resource->getValidationRules(),
@@ -117,6 +121,9 @@ abstract class BaseRestfulService implements Restful
         // If no data is provided, validate the resource against it's present attributes
         $data = is_null($data) ? $resource->getChanges() : $this->getAttributesFromData($data);
 
+        // Check, if user can update field
+        $data = $this->authorizeFields($data, $resource, auth()->user());
+
         $validator = validator(
             $data,
             $this->getRelevantValidationRulesUpdating($resource, $data),
@@ -128,6 +135,37 @@ abstract class BaseRestfulService implements Restful
         }
 
         return $validator->validated();
+    }
+
+    protected function authorizeFields($fields, Model $model, Authenticatable $user)
+    {
+        $modelPolicy = $this->getPolicyFor($this->model);
+
+        if (method_exists($modelPolicy, 'updateField')) {
+            $rules = $modelPolicy->updateField($user, $model);
+
+            $fields = collect($fields)
+                ->filter(function ($value, $key) use ($model, $rules) {
+                    if (empty($rule = $rules[$key]) && $rule !== false) {
+                        return true;
+                    }
+
+                    $ability = is_callable($rule)
+                        ? call_user_func($rule, [$value, $model->getOriginal($key)])
+                        : $rule;
+
+                    if (!$ability) {
+                        throw new UnauthorizedException(__('authorization.field.unauthorized', [
+                            'field' => $key
+                        ]));
+                    }
+
+                    return $ability;
+                })
+                ->toArray();
+        }
+
+        return $fields;
     }
 
 
