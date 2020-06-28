@@ -4,11 +4,15 @@ namespace Devolt\Restful\Http\Controllers;
 
 use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Models\Model;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Routing\Controller as BaseController;
 
-abstract class BaseRestfulController
+abstract class BaseRestfulController extends BaseController
 {
+    use AuthorizesRequests;
+
     /** @var string<Model> Target model class */
     protected static string $model = Model::class;
 
