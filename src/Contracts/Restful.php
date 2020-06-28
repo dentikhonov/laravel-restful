@@ -4,6 +4,7 @@ namespace Devolt\Restful\Contracts;
 
 use Devolt\Restful\Models\Model;
 use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -71,6 +72,14 @@ interface Restful
      * @return Model
      */
     public function singleItemQuery($model): Model;
+
+    /**
+     * Used to process over each item (e.g. hide/display fields, load relations, etc.)
+     *
+     * @param Model $model
+     * @return Model
+     */
+    public function processItem(Model $model): Model;
 
     /**
      * @param array $input

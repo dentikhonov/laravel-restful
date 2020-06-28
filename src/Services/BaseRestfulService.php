@@ -4,6 +4,7 @@ namespace Devolt\Restful\Services;
 
 use Devolt\Restful\Contracts\Restful;
 use Devolt\Restful\Models\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
@@ -160,7 +161,31 @@ abstract class BaseRestfulService implements Restful
         $model->load($model::getItemWith());
         $model->loadCount($model::getItemWithCount());
 
+        return $this->processItem($model);
+    }
+
+    public function processItem(Model $model): Model
+    {
+        if (!empty($fields = $this->getHiddenFieldsFor($model, auth()->user()))) {
+            $model = $model->makeHidden($fields);
+        }
+
         return $model;
+    }
+
+    public function getHiddenFieldsFor(Model $model, Authenticatable $user): array
+    {
+        $modelPolicy = Gate::getPolicyFor($this->getModel());
+
+        if (method_exists($modelPolicy, 'viewField')) {
+            return collect($modelPolicy->viewField($user, $model))
+                ->filter(fn($value) => !$value)
+                ->map(fn($value, $key) => $key)
+                ->values()
+                ->toArray();
+        }
+
+        return [];
     }
 
     /**
