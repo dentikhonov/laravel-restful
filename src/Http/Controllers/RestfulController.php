@@ -23,7 +23,7 @@ class RestfulController extends BaseRestfulController
         $perPage = $this->restfulService->getPerPage();
         $resourceClass = $this->getResourceCollectionClass();
         $collection = $perPage ? $query->paginate($perPage) : $query->get();
-        $collection = $collection->map(fn($item) => $this->restfulService->processItem($item));
+        $collection->transform(fn($item) => $this->restfulService->processItem($item));
 
         /** @var ResourceCollection $response */
         $response = new $resourceClass($collection);
