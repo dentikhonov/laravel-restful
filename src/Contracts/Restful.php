@@ -30,6 +30,11 @@ interface Restful
     public function getModelInstance(): Model;
 
     /**
+     * @param Model $instance New instance of model, used in the service
+     */
+    public function setModelInstance(Model $instance): void;
+
+    /**
      * @return string<JsonResource>
      */
     public function getResourceClass(): string;

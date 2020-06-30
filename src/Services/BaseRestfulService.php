@@ -51,6 +51,14 @@ abstract class BaseRestfulService implements Restful
     /**
      * @inheritDoc
      */
+    public function setModelInstance(Model $modelInstance): void
+    {
+        $this->modelInstance = $modelInstance;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function createInstance(array $input): Model
     {
         return $this->getModelInstance()->create($this->validateResource($this->getModelInstance(), $input));
